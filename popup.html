@@ -1,0 +1,154 @@
+<!-- popup.html - watchTimes with refresh interval input -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>watchTimes ⌚👀</title>
+  <style>
+    body {
+      font-family: Calibri, Arial, sans-serif;
+      min-width: 240px;
+      padding: 1.5em 1em 1em 1em;
+      background: #283593; /* Indigo 800 */
+      color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(40,53,147,0.15);
+    }
+    h1 {
+      font-size: 1.3em;
+      margin-bottom: 1em;
+      letter-spacing: 0.02em;
+      color: #fff;
+      text-shadow: 0 2px 8px #2222;
+    }
+    label {
+      margin-top: 1em;
+      font-size: 1em;
+      color: #fff;
+      font-weight: 500;
+    }
+    input[type="number"], input[type="text"] {
+      margin-top: 0.5em;
+      padding: 0.5em 0.7em;
+      border-radius: 6px;
+      border: none;
+      background: #111;
+      color: #fff;
+      font-size: 1.1em;
+      width: 100%;
+      box-sizing: border-box;
+      outline: none;
+      transition: box-shadow 0.2s;
+      box-shadow: 0 1px 4px #0002;
+    }
+    input[type="number"]:focus, input[type="text"]:focus {
+      box-shadow: 0 0 0 2px #536dfe;
+    }
+    button {
+      margin-top: 1em;
+      padding: 0.6em 1.2em;
+      border-radius: 6px;
+      border: none;
+      background: #536dfe;
+      color: #fff;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #0002;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #3949ab;
+    }
+    #status {
+      margin-top: 0.5em;
+      color: #b2ff59;
+      font-weight: 500;
+      min-height: 1.2em;
+    }
+    #nextRefresh {
+      margin-top: 1.2em;
+      font-size: 0.98em;
+      color: #fffde7;
+      letter-spacing: 0.01em;
+    }
+    #tabs {
+      display: flex;
+      margin-top: 1em;
+      cursor: pointer;
+    }
+    .tab {
+      flex: 1;
+      padding: 0.7em;
+      border-radius: 6px 6px 0 0;
+      background: #3949ab;
+      border: none;
+      color: #fff;
+      font-size: 1em;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    .tab:hover {
+      background: #536dfe;
+    }
+    .tab.active {
+      background: #283593;
+    }
+    #tab-content-page, #tab-content-global, #tab-content-strings, #tab-content-cookies {
+      padding: 1em;
+      border-radius: 0 0 6px 6px;
+      background: #111;
+      margin-top: -1px;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="text-align:right; font-family:cursive; font-size:1.5em; margin-bottom:1em; letter-spacing:0.04em;">watchTapper ⌚👀</h1>
+  <div id="tabs">
+    <button class="tab active" id="tab-page">Current Page</button>
+    <button class="tab" id="tab-global">Global</button>
+    <button class="tab" id="tab-strings">watchStrings 🧵</button>
+    <button class="tab" id="tab-cookies">cookieShuffler 🃏</button>
+  </div>
+  <div id="tab-content-page">
+    <label for="interval-page">Refresh interval (minutes):</label>
+    <input type="number" id="interval-page" min="1" max="120" value="3">
+    <div style="margin-top:0.7em;">
+      <label style="display:block; font-size:0.95em; margin-bottom:0.4em;">
+        <input type="checkbox" id="apply-subdomains"> Apply to all subdomains of page host<span id="host-label"></span>
+      </label>
+      <label style="display:block; font-size:0.95em;">
+        <input type="checkbox" id="apply-host"> Just this host
+      </label>
+    </div>
+    <p id="change-blurb" style="color:#b2ff59; font-weight:600; min-height:1.2em; margin:1em 0 0.5em 0;"></p>
+    <button id="save-page" style="margin-top:0.7em;">Save</button>
+    <p id="status-page"></p>
+    <p id="nextRefresh-page"></p>
+  </div>
+  <div id="tab-content-global" style="display:none;">
+    <label for="interval-global">Global refresh interval (minutes):</label>
+    <input type="number" id="interval-global" min="1" max="120" value="3">
+    <button id="save-global">Save</button>
+    <p id="status-global"></p>
+    <p id="nextRefresh-global"></p>
+  </div>
+  <div id="tab-content-strings" style="display:none;">
+    <label for="strings-list">Strings to watch for (one per line):</label>
+    <textarea id="strings-list" rows="6" style="width:100%;background:#111;color:#fff;border-radius:6px;border:none;padding:0.5em;margin-top:0.5em;"></textarea>
+    <button id="save-strings" style="margin-top:0.7em;">Save</button>
+    <p id="status-strings" style="color:#b2ff59;font-weight:500;min-height:1.2em;"></p>
+  </div>
+  <div id="tab-content-cookies" style="display:none;">
+    <div style="text-align:center; color:#b2ff59; font-size:1.1em; margin-bottom:1em;">Cookie Shuffler 🃏</div>
+    <label for="cookie-list">Cookies to keep:</label>
+    <div id="cookie-list" style="background:#222; color:#fff; border-radius:6px; padding:0.5em; margin-bottom:1em; min-height:2em;"></div>
+    <label for="manual-cookie">Add cookie by name:</label>
+    <input type="text" id="manual-cookie" style="width:100%;background:#111;color:#fff;border-radius:6px;border:none;padding:0.5em;margin-top:0.5em;">
+    <button id="add-cookie" style="margin-top:0.7em;">Add</button>
+    <button id="shuffle-cookies" style="margin-top:1.2em; background:#b2ff59; color:#222; font-weight:700; border-radius:6px;">Shuffle 🃏</button>
+    <p id="status-cookies" style="color:#b2ff59;font-weight:500;min-height:1.2em;"></p>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
